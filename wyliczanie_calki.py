@@ -13,4 +13,4 @@ for i in range(e):
     calka += szer * wys
 
 print(calka)
-print('test')
+print('test1')
