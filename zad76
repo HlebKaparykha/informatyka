@@ -1,0 +1,73 @@
+def szyfruj(napis, klucz):
+    n = len(klucz)
+    napis_szyfrowany = list(napis)  # Zamieniamy napis na listę, żeby móc łatwo zamieniać miejsca
+    for i in range(len(napis)):
+        # Indeks, z którym zamieniamy: (i % n)
+        j = klucz[i % n] - 1  # Indeks w Pythonie jest 0-based, więc odejmujemy 1
+        napis_szyfrowany[i], napis_szyfrowany[j] = napis_szyfrowany[j], napis_szyfrowany[i]
+    return ''.join(napis_szyfrowany)
+
+# Wczytanie danych z pliku szyfr1.txt
+with open("szyfr1.txt", "r") as f:
+    napisy = [f.readline().strip() for _ in range(6)]  # Wczytujemy 6 napisów
+    klucz = list(map(int, f.readline().strip().split()))  # Wczytujemy klucz 50-elementowy
+
+# Szyfrowanie napisów
+szyfrowane_napisy = [szyfruj(napis, klucz) for napis in napisy]
+
+# Zapisanie wyników do pliku wyniki_szyfr1.txt
+with open("wyniki_szyfr1.txt", "w") as f:
+    for szyfrogram in szyfrowane_napisy:
+        f.write(szyfrogram + "\n")
+
+
+
+def szyfruj(napis, klucz):
+    n = len(klucz)
+    napis_szyfrowany = list(napis)  # Zamieniamy napis na listę, żeby móc łatwo zamieniać miejsca
+    for i in range(len(napis)):
+        # Indeks, z którym zamieniamy: (i % n)
+        j = klucz[i % n] - 1  # Indeks w Pythonie jest 0-based, więc odejmujemy 1
+        napis_szyfrowany[i], napis_szyfrowany[j] = napis_szyfrowany[j], napis_szyfrowany[i]
+    return ''.join(napis_szyfrowany)
+
+# Wczytanie danych z pliku szyfr1.txt
+with open("szyfr1.txt", "r") as f:
+    napisy = [f.readline().strip() for _ in range(6)]  # Wczytujemy 6 napisów
+    klucz = list(map(int, f.readline().strip().split()))  # Wczytujemy klucz 50-elementowy
+
+# Szyfrowanie napisów
+szyfrowane_napisy = [szyfruj(napis, klucz) for napis in napisy]
+
+# Zapisanie wyników do pliku wyniki_szyfr1.txt
+with open("wyniki_szyfr1.txt", "w") as f:
+    for szyfrogram in szyfrowane_napisy:
+        f.write(szyfrogram + "\n")
+
+
+def odszyfruj(napis_szyfrowany, klucz):
+    n = len(klucz)
+    napis = list(napis_szyfrowany)  # Zamieniamy napis na listę
+    # Tworzymy odwrotność klucza, by odwrócić proces szyfrowania
+    odwrotny_klucz = [0] * n
+    for i in range(n):
+        odwrotny_klucz[klucz[i] - 1] = i
+
+    # Odszyfrowywanie
+    for i in range(len(napis_szyfrowany)):
+        j = odwrotny_klucz[i % n]  # Zamiast P[i] bierzemy odwrotny klucz
+        napis[i], napis[j] = napis[j], napis[i]  # Zamiana miejscami
+    return ''.join(napis)
+
+
+# Wczytanie danych z pliku szyfr3.txt
+with open("szyfr3.txt", "r") as f:
+    napis_szyfrowany = f.readline().strip()  # Wczytujemy zaszyfrowany napis
+    klucz = [6, 2, 4, 1, 5, 3]  # Klucz jest stały, podany w treści zadania
+
+# Odszyfrowanie napisu
+odszyfrowany_napis = odszyfruj(napis_szyfrowany, klucz)
+
+# Zapisanie wyniku do pliku wyniki_szyfr3.txt
+with open("wyniki_szyfr3.txt", "w") as f:
+    f.write(odszyfrowany_napis + "\n")
