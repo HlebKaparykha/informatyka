@@ -1,0 +1,96 @@
+import string
+
+def vigenere_encrypt(plain_text, key):
+    alphabet = string.ascii_uppercase
+    cipher_text = []
+    key_length = len(key)
+    key_index = 0
+
+    for char in plain_text:
+        if char in alphabet:
+            shift = alphabet.index(key[key_index % key_length])
+            cipher_text.append(alphabet[(alphabet.index(char) + shift) % 26])
+            key_index += 1
+        else:
+            cipher_text.append(char)
+
+    return ''.join(cipher_text)
+
+def vigenere_decrypt(cipher_text, key):
+    alphabet = string.ascii_uppercase
+    plain_text = []
+    key_length = len(key)
+    key_index = 0
+
+    for char in cipher_text:
+        if char in alphabet:
+            shift = alphabet.index(key[key_index % key_length])
+            plain_text.append(alphabet[(alphabet.index(char) - shift) % 26])
+            key_index += 1
+        else:
+            plain_text.append(char)
+
+    return ''.join(plain_text)
+
+def letter_frequency(text):
+    alphabet = string.ascii_uppercase
+    freq = {letter: 0 for letter in alphabet}
+    for char in text:
+        if char in alphabet:
+            freq[char] += 1
+    return freq
+
+def index_of_coincidence(freq, total_letters):
+    numerator = sum(f * (f - 1) for f in freq.values())
+    denominator = total_letters * (total_letters - 1)
+    return numerator / denominator
+
+def estimate_key_length(I):
+    return 0.0285 / (0.0385 - I)
+
+# 77.1
+with open('dokad.txt', 'r') as file:
+    text = file.read().strip()
+
+key = 'LUBIMYCZYTAC'
+
+# a) Liczba powtórzeń klucza
+num_repeats = (len(text.replace(" ", "")) + len(key) - 1) // len(key)
+
+# b) Szyfrowanie tekstu
+cipher_text = vigenere_encrypt(text, key)
+
+# Zapisywanie wyników
+with open('Vigenere_wyniki.txt', 'w') as file:
+    file.write(f"Liczba powtórzeń klucza: {num_repeats}\n")
+    file.write(f"Szyfrowany tekst: {cipher_text}\n")
+
+# 77.2
+with open('szyfr.txt', 'r') as file:
+    cipher_text = file.readline().strip()
+    key = file.readline().strip()
+
+# a) Odszyfrowanie tekstu
+plain_text = vigenere_decrypt(cipher_text, key)
+
+# b) Zapisywanie odszyfrowanego tekstu
+with open('Vigenere_wyniki.txt', 'a') as file:
+    file.write(f"Odszyfrowany tekst: {plain_text}\n")
+
+# 77.3
+# a) Liczba wystąpień liter
+freq = letter_frequency(cipher_text)
+with open('Vigenere_wyniki.txt', 'a') as file:
+    file.write("Liczba wystąpień liter:\n")
+    for letter, count in freq.items():
+        file.write(f"{letter}: {count}\n")
+
+# b) Szacowanie długości klucza
+total_letters = sum(freq.values())
+I = index_of_coincidence(freq, total_letters)
+estimated_length = estimate_key_length(I)
+
+# Zapisz wynik porównania
+with open('Vigenere_wyniki.txt', 'a') as file:
+    file.write(f"Szacunkowa długość klucza: {round(estimated_length, 2)}\n")
+    file.write(f"Dokładna długość klucza: {len(key)}\n")
